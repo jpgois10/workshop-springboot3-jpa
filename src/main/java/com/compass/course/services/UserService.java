@@ -2,6 +2,7 @@ package com.compass.course.services;
 
 import com.compass.course.entities.User;
 import com.compass.course.repositories.UserRepository;
+import com.compass.course.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,7 @@ public class UserService {
     public User findById(Long id) {
 //        Optional<User> obj = userRepository.findById(id);
 //        return obj.get();
-        return userRepository.findById(id).get();
+        return userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
     public User insert(User obj) {
