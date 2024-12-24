@@ -1,5 +1,6 @@
 package com.compass.course.resources.exceptions;
 
+import com.compass.course.services.exceptions.DatabaseException;
 import com.compass.course.services.exceptions.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,16 @@ public class ResourceExceptionHandler {
     public ResponseEntity<StandardError> resourceNotfound(ResourceNotFoundException e, HttpServletRequest request) {
         String error = "Resource not found.";
         HttpStatus httpStatus = HttpStatus.NOT_FOUND;
+        StandardError err = new StandardError(
+                Instant.now(), httpStatus.value(), error, e.getMessage(), request.getRequestURI()
+        );
+        return ResponseEntity.status(httpStatus).body(err);
+    }
+
+    @ExceptionHandler(DatabaseException.class)
+    public ResponseEntity<StandardError> resourceNotfound(DatabaseException e, HttpServletRequest request) {
+        String error = "Database error";
+        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
         StandardError err = new StandardError(
                 Instant.now(), httpStatus.value(), error, e.getMessage(), request.getRequestURI()
         );
